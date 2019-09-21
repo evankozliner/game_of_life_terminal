@@ -1,5 +1,12 @@
 # Conway's Game of life, but in the terminal
 
+I've seen a lot of GoL simulations online, but I wanted one where you could choose the placement of your patterns/creatures on the grid, and I wanted it to run in the terminal. Also, I saw almost all of the ones online run numpy, which can be a pain for beginners to install and understand. So I wrote this guy. 
+
+### Notes
+* Not really high-quality. Feel free to put up a PR to clean things up. The bulk of the logic was written one morning
+* Accompanies a blog post that I'm still writing. 
+* Complimentary elementary CA printer here: https://github.com/evankozliner/elementary-CAs
+
 ### Requirements
 * python3 
 * No other dependencies!
@@ -43,8 +50,9 @@ optional arguments:
 - [ ] Pressing enter will print more rows that don't do anything
 
 
-### Examples
+# Examples
 
+## A simple glider
 ```
 $ python3 Main.py -e 10 -t .05 -r 10 -w 25 -p placement_files/glider.csv 
 Conway's Game of Life https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
@@ -61,6 +69,7 @@ Conway's Game of Life https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
 ```
 
+## Unbounded growth 
 ```
 $ python3 Main.py -e 500 -t .05 -r 50 -w 100 -p placement_files/grower.csv 
 Conway's Game of Life https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
@@ -115,6 +124,8 @@ Conway's Game of Life https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 -------**-------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
 ```
+
+## A pulsar with a glider
 
 ```
 $ python3 Main.py -e 5 -t .05 -r 50 -w 100 -p placement_files/pulsar-and-glider.csv 
