@@ -1,4 +1,4 @@
-# game_of_life_terminal
+# Conway's Game of life, but in the terminal
 
 ### Requirements
 * python3 
