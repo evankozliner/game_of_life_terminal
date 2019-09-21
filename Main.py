@@ -1,4 +1,5 @@
 import math
+import csv
 import abc
 import copy
 import os
@@ -6,6 +7,7 @@ import argparse
 import sys
 import time
 from typing import *
+from patterns import pattern_map
 
 Matrix = List[List[int]]
 
@@ -17,31 +19,25 @@ def main() -> None:
 
     game.run(args.evolutions)
 
-#TODO
-#class TwoDimensionalCARules(abc.ABC):
-#    @abc.abstractmethod
-#    def transform   
-#
 class InitialConditionsBuilder:
-
     def __init__(self, width: int, height: int):
         self.state = [[0 for j in range(width)] for i in range(height)]
 
     def add_glider(self, x: int, y: int) -> Matrix:
-        glider = [[1,0,0], [0,1,1], [1,1,0]]
-        self._place(glider, x, y)
+        self._place(self.pattern_map['glider'], x, y)
+
+    def add_from_placement_file(self, file_path):
+        with open(file_path) as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                pattern_matrix = pattern_map[row[0]]
+                self._place(pattern_matrix, int(row[1]), int(row[2]))
 
     def _place(self, matrix: Matrix, x: int, y: int) -> None:
         ## TODO arg checking
         for row in range(len(matrix)):
             for column in range(len(matrix[0])):
                 self.state[y + row][x + column] = matrix[row][column]
-        #self._draw(self.state)
-
-    def _draw(self, state: Matrix) -> None:
-        key = {0: '-', 1: '*'}
-        for row in state:
-            print(''.join(key[cell] for cell in row))
 
     def build(self) -> Matrix:
         return self.state
@@ -55,6 +51,8 @@ def parse_args() -> [argparse.Namespace, Matrix]:
     parser.add_argument('-w', '--width', default=100, type=int, help="The width (number of columns) of the game.")
     parser.add_argument('-r', '--rows', default=50, type=int, help="The height (number of rows) of the game.")
     parser.add_argument('--glider', action='store_true', required=False) 
+    # TODO 
+    parser.add_argument('-p','--placement_file', type=str, required=False, help="The location of the placement file ") 
     # TODO custom array loader
 
     args = parser.parse_args()
@@ -62,6 +60,8 @@ def parse_args() -> [argparse.Namespace, Matrix]:
 
     if args.glider:
         initial_conditions_builder.add_glider(1, 1)
+    if args.placement_file:
+        initial_conditions_builder.add_from_placement_file(args.placement_file)
 
     return args, initial_conditions_builder.build()
 
@@ -71,7 +71,6 @@ def game_of_life_rule(state) -> Matrix:
     def neighbor(x: int, y: int) -> int:
         x_ = x % len(state[0])
         y_ = y % len(state)
-        #print("neighbor x: " + str(x) + " y: " + str(y) + " is " + " x_ " + str(x_) + " y_ " + str(y_))
         return state[y_][x_]
 
     def count_neighbors(x: int ,y: int) -> int:
@@ -82,7 +81,6 @@ def game_of_life_rule(state) -> Matrix:
     
     def rule_lookup(cell: int, neighbors_count: int) -> int:
         if cell:
-            #print(neighbors_count)
             # 2. Any live cell with two or three live neighbours lives on to the next generation.
             if neighbors_count == 2 or neighbors_count == 3:
                 return 1
@@ -100,9 +98,6 @@ def game_of_life_rule(state) -> Matrix:
             cell = state[row][column]
             neighbors_count = count_neighbors(column, row)
             next_state[row][column] = rule_lookup(cell, neighbors_count)
-#            print("Cell x: " + str(column) + " y: " + str(row) + " is " + str(cell) + \
-#                    " neighbors: " + str(neighbors_count) + " next: " + str(next_state[row][column]))
-#
     return next_state
 
 

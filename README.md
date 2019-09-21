@@ -8,3 +8,6 @@
 - [ ] More oscillators, unbounded growths, etc
 - [ ] Custom placement
 - [ ] Option for saving to a gif
+
+### Bugs
+- [ ] Pressing enter will print more rows that don't do anything
