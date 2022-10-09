@@ -15,28 +15,26 @@ I've seen a lot of GoL simulations online, but I wanted one where you could choo
 
 ```
 Conway's Game of Life https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
-usage: Main.py [-h] [-e EVOLUTIONS] [-t TICK_RATE] [-w WIDTH] [-r ROWS]
-               [--glider] [-p PLACEMENT_FILE]
+usage: Main.py [-h] [-e EVOLUTIONS] [-t TICK_RATE] [-w WIDTH] [-r ROWS] [-a] [--glider] [--random] [--seed SEED] [-p PLACEMENT_FILE]
 
 Runs Conway's game of life in the terminal.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -e EVOLUTIONS, --evolutions EVOLUTIONS
                         The number of steps to run the game of life for.
   -t TICK_RATE, --tick_rate TICK_RATE
-                        The time between ticks in game (in seconds, default
-                        0.3). Try something like 0.05 to watch the game evolve
-                        faster.
+                        The time between ticks in game (in seconds, default 0.3). Try something like 0.05 to watch the game evolve faster.
   -w WIDTH, --width WIDTH
                         The width (number of columns) of the game.
   -r ROWS, --rows ROWS  The height (number of rows) of the game.
-  --glider              Adds a simple glider to the game to give you an idea
-                        of what patterns are like.
+  -a, --auto            Automatically calculate size to the max terminal size, overwrites -r and -w.
+  --glider              Adds a simple glider to the game to give you an idea of what patterns are like.
+  --random              Randomize the initial layout.
+  --seed SEED           Set the random seed if --random is being used.
   -p PLACEMENT_FILE, --placement_file PLACEMENT_FILE
-                        The location of the placement file. You can use these
-                        to place patterns into the game. Be sure the patterns
-                        fall within the allocated width/rows
+                        The location of the placement file. You can use these to place patterns into the game. Be sure the patterns fall
+                        within the allocated width/rows
 ```
 
 

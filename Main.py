@@ -6,6 +6,7 @@ import os
 import argparse
 import sys
 import time
+import random
 from typing import *
 from patterns import pattern_map
 
@@ -20,8 +21,11 @@ def main() -> None:
     game.run(args.evolutions)
 
 class InitialConditionsBuilder:
-    def __init__(self, width: int, height: int):
-        self.state = [[0 for j in range(width)] for i in range(height)]
+    def __init__(self, width: int, height: int, is_random: bool = False):
+        if is_random:
+            self.state = [[random.randint(0,1) for j in range(width)] for i in range(height)]
+        else:
+            self.state = [[0 for j in range(width)] for i in range(height)]
 
     def add_glider(self, x: int, y: int) -> Matrix:
         self._place(pattern_map['glider'], x, y)
@@ -49,12 +53,27 @@ def parse_args() -> [argparse.Namespace, Matrix]:
     # TODO Add argument checking for width/height
     parser.add_argument('-w', '--width', default=100, type=int, help="The width (number of columns) of the game.")
     parser.add_argument('-r', '--rows', default=50, type=int, help="The height (number of rows) of the game.")
+    parser.add_argument('-a', '--auto', default=False, action='store_true', help="Automatically calculate size to the max terminal size, overwrites -r and -w.")
     parser.add_argument('--glider', action='store_true', required=False, help="Adds a simple glider to the game to give you an idea of what patterns are like.") 
+    parser.add_argument('--random', action='store_true', default=False, required=False, help="Randomize the initial layout.") 
+    parser.add_argument('--seed', type=int, default=None, required=False, help="Set the random seed if --random is being used.") 
     # TODO test placement file for compatibility with width/height
     parser.add_argument('-p','--placement_file', type=str, required=False, help="The location of the placement file. You can use these to place patterns into the game. Be sure the patterns fall within the allocated width/rows") 
 
     args = parser.parse_args()
-    initial_conditions_builder = InitialConditionsBuilder(args.width, args.rows)
+
+    if args.seed is not None:
+        random.seed(args.seed)
+
+    if args.auto:
+        terminal = os.get_terminal_size()
+        rows = terminal.lines - 3
+        width = terminal.columns
+    else:
+        rows = args.rows
+        width = args.width
+
+    initial_conditions_builder = InitialConditionsBuilder(width, rows, args.random)
 
     if args.glider:
         initial_conditions_builder.add_glider(1, 1)
